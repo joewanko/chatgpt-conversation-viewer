@@ -1,6 +1,16 @@
-# Getting Started with Create React App
+# ChatGPT Conversation Viewer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and ChatGPT.
+
+## Adding Conversations
+To add your own conversations to the application, follow these steps:
+
+- Open the src/conversations.json file.
+- Copy the conversation data from your ChatGPT export.
+- Paste the copied conversation data into the src/conversations.json file.
+- Save the file.
+
+This will add your conversations to the application, allowing you to test and interact with them.
 
 ## Available Scripts
 
@@ -63,3 +73,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Disclaimer
+
+_Please note that this project and its use of ChatGPT is solely for informational and fun purposes. The creator of this project is not associated with OpenAI or ChatGPT._
