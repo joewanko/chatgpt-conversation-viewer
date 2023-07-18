@@ -109,6 +109,8 @@ function App() {
         if (getRequest.result) {
           processConversations(getRequest.result);
         }
+        
+        setIsLoading(false);
       };
     })();
   }, []);
