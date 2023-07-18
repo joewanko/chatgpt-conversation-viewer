@@ -4,6 +4,9 @@ import { Container, Form, FormGroup, FormControl, Button, Modal } from 'react-bo
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Instructions from './Instructions';
+import GitHubForkRibbon from 'react-github-fork-ribbon';
+
+const REPO_URL = 'https://github.com/joewanko/chatgpt-conversation-viewer';
 
 function App() {
   const [formattedConversations, setFormattedConversations] = useState([]);
@@ -19,7 +22,6 @@ function App() {
   const handleOpenModal = () => {
     setShowModal(true);
   };
-
 
   const getDb = () => {
     return new Promise((resolve, reject) => {
@@ -164,14 +166,20 @@ function App() {
     // Other screen
     return (
       <Container style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', maxWidth: '800px' }}>
-      <Form>
-        <FormGroup>
-          <Form.Label><h4>Select your conversations.json file</h4></Form.Label>
-          <FormControl type="file" accept=".json" onChange={handleFileSelect} />
-        </FormGroup>
-      </Form>
-      <Instructions />
-    </Container>
+        <Form>
+          <FormGroup>
+            <Form.Label><h4>Select your conversations.json file</h4></Form.Label>
+            <FormControl type="file" accept=".json" onChange={handleFileSelect} />
+          </FormGroup>
+        </Form>
+        <Instructions />
+        <GitHubForkRibbon
+          href={REPO_URL}
+          target="_blank"
+          position="right">
+          Fork me on GitHub
+        </GitHubForkRibbon>
+      </Container>
     );
   }
 
@@ -213,7 +221,7 @@ function App() {
           </p>
           <p>
             The source code for this project can be found on{' '}
-            <a href="https://github.com/joewanko/chatgpt-conversation-viewer" target="_blank" rel="noopener noreferrer">
+            <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
               GitHub
             </a>.
           </p>
