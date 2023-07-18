@@ -1,8 +1,9 @@
 import { FaCog } from 'react-icons/fa';
 import React, { useEffect, useState, useRef } from 'react';
-import { Button, Container, Form, Modal } from 'react-bootstrap';
+import { Container, Form, FormGroup, FormControl, Button, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import Instructions from './Instructions';
 
 function App() {
   const [formattedConversations, setFormattedConversations] = useState([]);
@@ -109,7 +110,7 @@ function App() {
         if (getRequest.result) {
           processConversations(getRequest.result);
         }
-        
+
         setIsLoading(false);
       };
     })();
@@ -162,16 +163,17 @@ function App() {
   if (!formattedConversations?.length) {
     // Other screen
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <Form>
-          <Form.Group controlId="file">
-            <Form.Control type="file" accept=".json" onChange={handleFileSelect} />
-          </Form.Group>
-        </Form>
-      </div>
+      <Container style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', maxWidth: '800px' }}>
+      <Form>
+        <FormGroup>
+          <Form.Label><h4>Select your conversations.json file</h4></Form.Label>
+          <FormControl type="file" accept=".json" onChange={handleFileSelect} />
+        </FormGroup>
+      </Form>
+      <Instructions />
+    </Container>
     );
   }
-
 
   return (
     <Container className="App">
@@ -211,10 +213,9 @@ function App() {
           </p>
           <p>
             The source code for this project can be found on{' '}
-            <a href="https://github.com/your-username/your-project" target="_blank" rel="noopener noreferrer">
+            <a href="https://github.com/joewanko/chatgpt-conversation-viewer" target="_blank" rel="noopener noreferrer">
               GitHub
-            </a>
-            .
+            </a>.
           </p>
           <p>
             This application does not store any user data outside of your browser's IndexedDB.
