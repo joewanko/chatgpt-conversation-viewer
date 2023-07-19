@@ -134,3 +134,4 @@ conversations.json
 .firebase
 
 build
+.DS_Store
