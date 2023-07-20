@@ -3,7 +3,7 @@
 
 ## Description
 
-This project is a web application that allows users to view, search, and sort OpenAI's ChatGPT conversations. It's built using React and Firebase, and utilizes IndexedDB for storing the conversations.
+ChatGPT Conversation Viewer is a web application that allows users to view, search, and sort OpenAI's ChatGPT conversations. It's built using React and Firebase, and utilizes IndexedDB for storing the conversations.
 
 ## Getting Started
 
