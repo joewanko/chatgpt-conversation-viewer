@@ -4,11 +4,19 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import GitHubForkRibbon from 'react-github-fork-ribbon';
+import { REPO_URL } from './constants';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <App />
+    <GitHubForkRibbon
+          href={REPO_URL}
+          target="_blank"
+          position="right">
+          Fork me on GitHub
+        </GitHubForkRibbon>
   </React.StrictMode>
 );
 

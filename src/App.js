@@ -3,11 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Container, Form, FormGroup, FormControl, Button, Modal } from 'react-bootstrap';
 import './App.css';
 import Instructions from './Instructions';
-import GitHubForkRibbon from 'react-github-fork-ribbon';
-
-const REPO_URL = 'https://github.com/joewanko/chatgpt-conversation-viewer';
-
-const EXCERPT_LENGTH = 400;
+import { REPO_URL, EXCERPT_LENGTH } from './constants';
 
 function App() {
   const [formattedConversations, setFormattedConversations] = useState([]);
@@ -179,12 +175,6 @@ function App() {
           </FormGroup>
         </Form>
         <Instructions />
-        <GitHubForkRibbon
-          href={REPO_URL}
-          target="_blank"
-          position="right">
-          Fork me on GitHub
-        </GitHubForkRibbon>
       </Container>
     );
   }
