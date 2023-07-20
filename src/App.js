@@ -5,6 +5,13 @@ import './App.css';
 import Instructions from './Instructions';
 import { REPO_URL, EXCERPT_LENGTH } from './constants';
 
+function escapeHtml(html) {
+  var text = document.createTextNode(html);
+  var p = document.createElement('p');
+  p.appendChild(text);
+  return p.innerHTML;
+}
+
 function App() {
   const [formattedConversations, setFormattedConversations] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,6 +51,7 @@ function App() {
     const transaction = db.transaction('conversations', 'readwrite');
     const store = transaction.objectStore('conversations');
     store.delete('data');
+    setShowModal(false);
   };
 
   const processConversations = (data) => {
@@ -141,7 +149,10 @@ function App() {
   );
 
   // Function to highlight the search term
-  const highlightTerm = (text, term) => {
+  const highlightTerm = (rawText, rawTerm) => {
+    let text = escapeHtml(rawText);
+    const term = escapeHtml(rawTerm);
+
     if (term !== "") {
       const index = text?.toLowerCase().indexOf(term?.toLowerCase());
       if (index >= 0) {
