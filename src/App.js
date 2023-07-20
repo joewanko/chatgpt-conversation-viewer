@@ -1,12 +1,13 @@
-import { FaCog } from 'react-icons/fa';
+import { FaCog, FaCopy, FaExternalLinkAlt } from 'react-icons/fa';
 import React, { useEffect, useState, useRef } from 'react';
 import { Container, Form, FormGroup, FormControl, Button, Modal } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Instructions from './Instructions';
 import GitHubForkRibbon from 'react-github-fork-ribbon';
 
 const REPO_URL = 'https://github.com/joewanko/chatgpt-conversation-viewer';
+
+const EXCERPT_LENGTH = 400;
 
 function App() {
   const [formattedConversations, setFormattedConversations] = useState([]);
@@ -64,7 +65,8 @@ function App() {
           id: "https://chat.openai.com/c/" + conversation.id,
           title: conversation.title,
           date: date.toLocaleDateString(),
-          excerpt: allMessages[0]?.slice(0, 210),
+          excerpt: allMessages[0]?.slice(0, EXCERPT_LENGTH),
+          prompt: allMessages[0],
           allMessages: allMessages.join(" "),
         };
       });
@@ -153,6 +155,10 @@ function App() {
     return { __html: text };
   }
 
+  function copyContent(item) {
+    navigator.clipboard.writeText(item.prompt);
+  }
+
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -184,33 +190,44 @@ function App() {
   }
 
   return (
-    <Container className="App">
-      <Form.Group className="py-3" style={{ position: 'sticky', top: 0, zIndex: 1, backgroundColor: 'white', display: 'flex', alignItems: 'center' }}>
-        <Form.Control ref={searchRef} type="text" placeholder="Search..." onChange={handleChange} style={{ flex: '1', marginRight: '20px' }} />
-        <Button variant="secondary" className="modal-button" onClick={handleOpenModal}>
-          <FaCog className="settings-icon" />
-        </Button>
-      </Form.Group>
-
+    <Container style={{ maxWidth: 'none' }}>
+      <h1 className='heading'>ChatGPT Conversation Viewer</h1>
+        
       <div className="flex-container">
         {filteredConversations.map((item, index) => {
           const excerptIndex = item.allMessages?.toLowerCase().indexOf(searchTerm?.toLowerCase());
           const start = searchTerm !== "" && excerptIndex >= 0
-            ? Math.max(0, excerptIndex - Math.floor((210 - searchTerm?.length) / 2))
+            ? Math.max(0, excerptIndex - Math.floor((EXCERPT_LENGTH - searchTerm?.length) / 2))
             : 0;
-          const end = start + 210;
+          const end = start + EXCERPT_LENGTH;
           let excerpt = item.allMessages?.slice(start, end);
           if (start > 0) excerpt = '...' + excerpt;
           if (end < item.allMessages?.length) excerpt = excerpt + '...';
           return (
             <div key={index} className="flex-row">
-              <div className='date'>{item.date}</div>
+              <div className='min'>{item.date}</div>
               <div className='title'><a href={item.id} target="_blank" rel="noopener noreferrer">{item.title}</a></div>
               <div className='excerpt' dangerouslySetInnerHTML={highlightTerm(excerpt, searchTerm)} />
+              <div className='min'>
+                <Button aria-label="Copy first prompt to clipboard" variant="link" className="modal-button" onClick={() => copyContent(item)}>
+                  <FaCopy className="copy-icon" />
+                </Button>
+              </div>
+              <div className='min'>
+                <Button aria-label={`Link to ${item.title} (opens in new window)`} variant="link" href={item.id} target="_blank" rel="noopener noreferrer">
+                  <FaExternalLinkAlt className="copy-icon" />
+                </Button>
+              </div>
             </div>
           );
         })}
       </div>
+      <Form.Group className="py-3" style={{ position: 'sticky', bottom: 0, zIndex: 1, backgroundColor: 'white', display: 'flex', alignItems: 'center', boxShadow: '0px 30px 15px 35px white' }}>
+        <Form.Control ref={searchRef} type="text" placeholder="Search..." onChange={handleChange} style={{ flex: '1', marginRight: '20px' }} />
+        <Button variant="secondary" className="modal-button" onClick={handleOpenModal}>
+          <FaCog className="settings-icon" />
+        </Button>
+      </Form.Group>
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>About This Project</Modal.Title>
