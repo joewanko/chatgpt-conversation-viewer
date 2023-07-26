@@ -97,7 +97,7 @@ const useConversations = ({ searchTerm }: useConversationsOptions) => {
 
             reader.readAsText(file);
         }
-    }, []);
+    }, [ processConversations ]);
 
     useEffect(() => {
         (async () => {
@@ -114,7 +114,7 @@ const useConversations = ({ searchTerm }: useConversationsOptions) => {
                 setIsLoading(false);
             };
         })();
-    }, []);
+    }, [ processConversations ]);
 
     return {
         conversations: filteredConversations,
