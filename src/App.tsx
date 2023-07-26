@@ -5,7 +5,25 @@ import './App.css';
 import Instructions from './Instructions';
 import { REPO_URL, EXCERPT_LENGTH } from './constants';
 
-function escapeHtml(html) {
+interface Conversation {
+  id: string;
+  title: string;
+  date: string;
+  excerpt: string;
+  prompt: string;
+  allMessages: string;
+}
+
+interface NodeData {
+  message?: {
+    content?: {
+      parts?: string[]
+    }
+  }
+}
+
+
+function escapeHtml(html: string) {
   var text = document.createTextNode(html);
   var p = document.createElement('p');
   p.appendChild(text);
@@ -13,10 +31,10 @@ function escapeHtml(html) {
 }
 
 function App() {
-  const [formattedConversations, setFormattedConversations] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [formattedConversations, setFormattedConversations] = useState<Conversation[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [showModal, setShowModal] = useState(false);
-  const searchRef = useRef(null);
+  const searchRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const handleCloseModal = () => {
@@ -27,7 +45,7 @@ function App() {
     setShowModal(true);
   };
 
-  const getDb = () => {
+  const getDb = (): Promise<IDBDatabase> => {
     return new Promise((resolve, reject) => {
       const openRequest = indexedDB.open('ChatApp', 1);
       openRequest.onupgradeneeded = function () {
@@ -47,21 +65,21 @@ function App() {
 
   const clearConversations = async () => {
     setFormattedConversations([]);
-    const db = await getDb();
+    const db: IDBDatabase = await getDb();
     const transaction = db.transaction('conversations', 'readwrite');
     const store = transaction.objectStore('conversations');
     store.delete('data');
     setShowModal(false);
   };
 
-  const processConversations = (data) => {
+  const processConversations = (data: any[]) => {
     try {
-      const formattedData = data.map(conversation => {
-        let allMessages = [];
-        Object.values(conversation.mapping).filter(nodeData => {
-          return nodeData?.message?.content?.parts?.length > 0 && !!nodeData.message.content.parts.join();
-        }).forEach(nodeData => {
-          allMessages.push(nodeData.message.content.parts.join());
+      const formattedData = data.map((conversation: any) => {
+        let allMessages: string[] = [];
+        Object.values(conversation.mapping as NodeData[]).filter((nodeData: NodeData) => {
+          return nodeData?.message?.content?.parts && nodeData?.message?.content?.parts?.length > 0 && !!nodeData.message.content.parts.join();
+        }).forEach((nodeData: NodeData) => {
+          nodeData?.message?.content?.parts?.length && allMessages.push(nodeData?.message?.content?.parts?.join());
         });
 
         const date = new Date(conversation.create_time * 1000);
@@ -90,21 +108,23 @@ function App() {
     }
   };
 
-  const handleFileSelect = async (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
 
-    reader.onload = async function (event) {
-      const data = JSON.parse(event.target.result);
-      processConversations(data);
+      reader.onload = async function (event) {
+        const data = JSON.parse(String(event?.target?.result));
+        processConversations(data);
 
-      const db = await getDb();
-      const transaction = db.transaction('conversations', 'readwrite');
-      const store = transaction.objectStore('conversations');
-      store.put(data, 'data');
-    };
+        const db: IDBDatabase = await getDb();
+        const transaction = db.transaction('conversations', 'readwrite');
+        const store = transaction.objectStore('conversations');
+        store.put(data, 'data');
+      };
 
-    reader.readAsText(file);
+      reader.readAsText(file);
+    }
   };
 
   useEffect(() => {
@@ -125,7 +145,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const keydownHandler = (event) => {
+    const keydownHandler = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key === 'f') {
         event.preventDefault();
         if (searchRef.current) {
@@ -139,7 +159,7 @@ function App() {
     };
   }, []);
 
-  const handleChange = event => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
@@ -149,7 +169,7 @@ function App() {
   );
 
   // Function to highlight the search term
-  const highlightTerm = (rawText, rawTerm) => {
+  const highlightTerm = (rawText: string, rawTerm: string) => {
     let text = escapeHtml(rawText);
     const term = escapeHtml(rawTerm);
 
@@ -162,7 +182,7 @@ function App() {
     return { __html: text };
   }
 
-  function copyContent(item) {
+  function copyContent(item: Conversation) {
     navigator.clipboard.writeText(item.prompt);
   }
 
@@ -193,7 +213,7 @@ function App() {
   return (
     <Container style={{ maxWidth: 'none' }}>
       <h1 className='heading'>ChatGPT Conversation Viewer</h1>
-        
+
       <div className="flex-container">
         {filteredConversations.map((item, index) => {
           const excerptIndex = item.allMessages?.toLowerCase().indexOf(searchTerm?.toLowerCase());

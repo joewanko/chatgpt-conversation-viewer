@@ -4,11 +4,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+// @ts-expect-error
 import GitHubForkRibbon from 'react-github-fork-ribbon';
 import { REPO_URL } from './constants';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+const el = document.getElementById('root');
+
+const root = el && ReactDOM.createRoot(el);
+root?.render(
   <React.StrictMode>
     <App />
     <GitHubForkRibbon
