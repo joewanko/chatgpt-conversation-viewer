@@ -210,7 +210,7 @@ function App() {
               <div className='title'><a href={item.id} target="_blank" rel="noopener noreferrer">{item.title}</a></div>
               <div className='excerpt' dangerouslySetInnerHTML={highlightTerm(excerpt, searchTerm)} />
               <div className='min'>
-                <Button aria-label="Copy first prompt to clipboard" variant="link" className="modal-button" onClick={() => copyContent(item)}>
+                <Button aria-label="Copy first prompt to clipboard" title="Copy first prompt to clipboard" variant="link" className="modal-button" onClick={() => copyContent(item)}>
                   <FaCopy className="copy-icon" />
                 </Button>
               </div>
